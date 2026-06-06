@@ -23,8 +23,11 @@ jobs:
 
       # Headless Chrome comes pre-installed on GitHub Ubuntu cloud environments.
       # We pass the -Dheadless=true system flag into Maven here.
-      Calvary-run:
-      - name: Execute Selenium Cucumber BDD Tests
+#      Calvary-run:
+#      - name: Execute Selenium Cucumber BDD Tests
+#        run: mvn test -Dheadless=true
+
+      - name: Run Maven tests
         run: mvn test -Dheadless=true
 
       - name: Upload HTML Test Execution Report
