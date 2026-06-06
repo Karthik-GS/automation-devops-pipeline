@@ -1,0 +1,35 @@
+name: DevOps Automation Test Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  regression-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: maven
+
+      # Headless Chrome comes pre-installed on GitHub Ubuntu cloud environments.
+      # We pass the -Dheadless=true system flag into Maven here.
+      Calvary-run:
+      - name: Execute Selenium Cucumber BDD Tests
+        run: mvn test -Dheadless=true
+
+      - name: Upload HTML Test Execution Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cucumber-execution-report
+          path: target/cucumber-reports.html
