@@ -1,10 +1,10 @@
 pipeline {
     agent any
 
-//     environment {
-//         // Keeps variables out of the execution blocks
-//         MAVEN_HOME = tool 'M3'
-//     }
+     environment {
+         // Keeps variables out of the execution blocks
+         MAVEN_HOME = tool 'M3'
+     }
 
     stages {
         stage('Pull Cloud Repository') {
