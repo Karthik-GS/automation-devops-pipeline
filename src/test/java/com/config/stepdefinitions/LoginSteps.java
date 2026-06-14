@@ -18,6 +18,7 @@ public class LoginSteps {
         // Essential configuration for DevOps / CI pipelines
         if (Boolean.parseBoolean(System.getProperty("headless"))) {
             options.addArguments("--headless=new");
+            options.addArguments("--disable-gpu");
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-dev-shm-usage");
         }
