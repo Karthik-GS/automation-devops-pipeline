@@ -1,28 +1,27 @@
 pipeline {
     agent any
 
-     environment {
-         // Keeps variables out of the execution blocks
-         MAVEN_HOME = tool 'M3'
-     }
+    // This tells Jenkins to automatically load and inject 'M3' into the system PATH
+    tools {
+        maven 'M3'
+    }
 
     stages {
         stage('Pull Cloud Repository') {
             steps {
-                checkout scm // Dynamically pulls down fresh code from GitHub Cloud
+                checkout scm
             }
         }
 
         stage('Execute UI, API & DB Test Suite') {
             steps {
-                // Runs all 30+ tests headlessly inside Jenkins
+                // Because of the tools block above, you can now call 'mvn' directly cleanly
                 sh 'mvn clean test -Dheadless=true'
             }
         }
 
         stage('Generate Execution Analytics') {
             steps {
-                // Parses target/allure-results to create your interactive dashboard
                 allure includeProperties: false, jdk: '', results: [[path: 'target/allure-results']]
             }
         }
