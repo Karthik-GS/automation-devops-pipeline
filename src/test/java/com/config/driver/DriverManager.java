@@ -10,21 +10,27 @@ public class DriverManager {
 
     public static WebDriver getDriver() {
         if (driver == null) {
-            WebDriverManager.chromedriver().setup();
             ChromeOptions options = new ChromeOptions();
 
-            // Robust check: Look for Maven property OR if running on Jenkins container
             String headlessProp = System.getProperty("headless");
             boolean isJenkins = System.getenv("JENKINS_URL") != null;
 
             if ("true".equalsIgnoreCase(headlessProp) || isJenkins) {
+                // This tells WebDriverManager to handle the architecture discovery cleanly
+                WebDriverManager.chromedriver().setup();
+
                 options.addArguments("--headless=new");
                 options.addArguments("--disable-gpu");
                 options.addArguments("--no-sandbox");
                 options.addArguments("--disable-dev-shm-usage");
-                System.out.println(">>> CI/CD Environment Detected. Launching Chrome HEADLESS.");
+
+                // Crucial flag for bare-bones Docker environments lacking standard system shared memory
+                options.addArguments("--disable-headless-sharing");
+
+                System.out.println(">>> CI/CD Environment: Browser managed natively by WebDriverManager.");
             } else {
-                System.out.println(">>> Local Environment Detected. Launching Chrome HEADED.");
+                WebDriverManager.chromedriver().setup();
+                System.out.println(">>> Local Environment: Launching standard Chrome.");
             }
 
             driver = new ChromeDriver(options);
@@ -36,7 +42,7 @@ public class DriverManager {
     public static void quitDriver() {
         if (driver != null) {
             driver.quit();
-            driver = null; // Reset to null so next tests start fresh
+            driver = null;
         }
     }
 }
